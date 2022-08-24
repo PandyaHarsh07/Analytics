@@ -1,0 +1,800 @@
+---
+title: " "
+output: html_document
+---
+
+<BR>
+
+<CENTER>
+<FONT SIZE=4, COLOR="#1F1F90"><B> "M6 - Final Project" </B>
+
+<P>
+<B> ALY6000 - Introduction to analytics </B>
+<BR>
+<B> NORTHEASTERN UNIVERSITY </B>
+<BR>
+Harsh Pandya 
+<BR>
+Date of submission: `r format(Sys.time(), "%d %B, %Y")`
+<P> Project Report
+</FONT>
+</CENTER>
+<P>
+
+---
+Library Data
+---
+<P> <BR>
+
+```{r libraries, message=FALSE, warning=FALSE}
+
+# List of libraries that are used in this report
+library(readxl)
+library(knitr)
+library(dplyr)
+library(kableExtra)
+library(RColorBrewer)
+library(tidyverse)
+
+# Data set used for the report 
+Pandya19Final <- read_excel("DataSets/Project6Data.xlsx")
+
+```
+
+
+<P>
+
+<P><BR>
+<FONT SIZE=4, COLOR="#0A0909">
+<B>INTRODUCTION</B>
+</FONT>
+
+<P>
+
+<B><FONT SIZE = 3, COLOR = "#0B0B0B">
+ Market Analysis for the Retail Industry Based on Sales in the year 2020 </B>
+<BR> 
+<FONT SIZE = 3, COLOR = "#0B0B0B">
+We humans in the current scenario are covered with Data, and what good is any data if a business cannot analyze it and work on it to make better decisions or to grow as an organization or even at times the entire nation, same is the case with the Retail Industry, with the growing population, grows the need of supplies.<BR>
+Supplies be it from any department, technology, office, House supplies they all are manufactured and delivered to customers to gain profit and balance the economy through international trades. But just like every other industry retail has it's drawbacks, competition, quantity, quality, margins, demand e.t.c.
+A particular item which might be popular in the LATAM region might not have the same value in say Asia Pacific, so various factors comes into play while working in the same industry. 
+Here comes the role of Data analysis, to predict the customer behaviour, hashfalls, preventive maintanence to endure loses and demand management all can be efficiently handled and could help organizations make Profits and countries to improve their revenue.
+The Data set given to us highlights the same, net profits and losses for the same product in different regions and their records.
+<P> </FONT>
+<B><FONT SIZE = 3, COLOR = "#0B0B0B">
+Applications of Big Data Analytics in the Retail Industry for Store Sales </B>
+<BR> 
+<FONT SIZE = 3, COLOR = "#0B0B0B">
+From 2021 to 2028, the global big data analytics in retail market is expected to grow at a CAGR of 23.1 percent, from $4,854 million in 2020 to $25,560 million in 2028. In retail, big data analytics allows for the detection of customer behavior, the discovery of customer shopping patterns and trends, the improvement of customer service quality, and the improvement of client retention and satisfaction. Retailers can use it for customer segmentation, loyalty analysis, pricing, cross-selling, supply chain management, demand forecasting, market basket analysis, and finance and fixed asset management, along with many other things. Nair(2021)
+<BR>
+1. <B>Sales and Marketing analysis </B>, is one of the widest growing feature used in the industry as with the drift of most stores online, there's a ton more opportunities to grow the valuation and record High Profits using Analytical tools.
+Region wise, The NAM region has observed great hikes wherein Big stores, retailers are adapting Big Data analytics to improve the revenue generation.(Green,2020)
+<BR>
+2.<B> Demand Planning </B>, With the introduction of such features any organization can depict the customer behaviours in that particular region using past records which would lead to increased efficiency in Prroduction. 
+<BR>
+3. <B>Supply Chain Operations Management </B>, to be able to manage the entire inventory and track it's workflow has made it much simpler for the Stores to manage the availability of stocks and hold onto the Product details.
+<BR>
+
+<P> </FONT>
+<B><FONT SIZE = 3, COLOR = "#0B0B0B">
+Evaluation of the mentioned data set </B>
+<BR> 
+<FONT SIZE = 3, COLOR = "#1F1F90">
+The provided sheet contains the Store supplies with respective to their sales figures across various major continents in the globe that include, Asia Pacific, America, Africa and Europe. 
+The following dataset highlights the Sales with respect to different parameters, categorical and Numerical.
+Price, Quantity, Total Sales, Profit, Shipping cost, etc being examples of the numerical values wherein, there is different categories to specify the region, city, state of the given product on the accountability of Department or segment of any given product.
+The given dataset is a good dataset, as it is a clean one and has various fields that provide detailed analysis on the first sight regarding any product. 
+<P> </FONT>
+<B><FONT SIZE = 3, COLOR = "#0B0B0B">
+Identifying the problem statement/asking the correct question? </B>
+<BR> 
+<FONT SIZE = 3, COLOR = "#583302">
+One of the biggest problems that can be faced by any organization is loss, so to figure out if the sales of a particular item can be improved by analyzing it specific to a particular region and providing variations in Discount Prices and Shipping costs to handle the situation.
+<P> </FONT>
+<B><FONT SIZE = 3, COLOR = "#0B0B0B">
+Solution Development  </B>
+<BR> 
+<FONT SIZE = 3, COLOR = "#583302">
+For the current scenario, we can handle the factors Shipping cost and check for outliers using Box Plot that would highlight the higher end costing, which we can then compare to the available products and their Profit/Loss values, to analyse the reason of the market loss be it the higher prices or shortage of supplies which can then be evalauted to generate a final conclusion.
+<P> </FONT>
+
+<P>
+
+<P><BR>
+<FONT SIZE=4, COLOR="#0B0B0B">
+<B>ANALYSIS SECTION</B>
+</FONT>
+
+<B><FONT SIZE = 3, COLOR = "E6870A">
+First task </B>
+<BR> 
+<FONT SIZE = 3, COLOR = "#9150D1">
+<B> To determine the Descriptive values for any 5 variable from the Excel database </B>
+<P> </FONT>
+
+```{r}
+#To calculate the Basic Descriptive values for 5 variables
+Price19_mean = mean(Pandya19Final$Price)
+Price19_sd = sd(Pandya19Final$Price)
+Price19_range = (max(Pandya19Final$Price)- min(Pandya19Final$Price))
+Price19_median = median(Pandya19Final$Price)
+Price_Table19 = round(c(Price19_mean, Price19_sd, Price19_range, Price19_median), 2)
+Price_Matrix19 = matrix(Price_Table19, nrow = 4, byrow = TRUE)
+
+Discount19_mean = mean(Pandya19Final$Discount)
+Discount19_sd = sd(Pandya19Final$Discount)
+Discount19_range = (max(Pandya19Final$Discount)- min(Pandya19Final$Discount))
+Discount19_median = median(Pandya19Final$Discount)
+Discount_Table19 = round(c(Discount19_mean, Discount19_sd, Discount19_range, Discount19_median), 2)
+Discount_Matrix19 = matrix(Discount_Table19, nrow = 4, byrow = TRUE)
+
+ShippingC19_mean = mean(Pandya19Final$ShippingCost_Product)
+ShippingC19_sd = sd(Pandya19Final$ShippingCost_Product)
+ShippingC19_range = (max(Pandya19Final$ShippingCost_Product)- min(Pandya19Final$ShippingCost_Product))
+ShippingC19_median = median(Pandya19Final$ShippingCost_Product)
+ShippingC_Table19 = round(c(ShippingC19_mean, ShippingC19_sd, ShippingC19_range, ShippingC19_median), 2)
+ShippingC_Matrix19 = matrix(ShippingC_Table19, nrow = 4, byrow = TRUE)
+
+SalesT19_mean = mean(Pandya19Final$Sales_Total)
+SalesT19_sd = sd(Pandya19Final$Sales_Total)
+SalesT19_range = (max(Pandya19Final$Sales_Total)- min(Pandya19Final$Sales_Total))
+SalesT19_median = median(Pandya19Final$Sales_Total)
+SalesT_Table19 = round(c(SalesT19_mean, SalesT19_sd, SalesT19_range, SalesT19_median), 2)
+SalesT_Matrix19 = matrix(SalesT_Table19, nrow = 4, byrow = TRUE)
+
+Profit19_mean = mean(Pandya19Final$Profits)
+Profit19_sd = sd(Pandya19Final$Profits)
+Profit19_range = (max(Pandya19Final$Profits)- min(Pandya19Final$Profits))
+Profit19_median = median(Pandya19Final$Profits)
+Profit_Table19 = round(c(Profit19_mean, Profit19_sd, Profit19_range, Profit19_median), 2)
+Profit_Matrix19 = matrix(Profit_Table19, nrow = 4, byrow = TRUE)
+
+#Joining the matrices using cbind function and then naming the rows and columns.
+MatrixF19 = cbind(Price_Matrix19, Discount_Matrix19, ShippingC_Matrix19, SalesT_Matrix19, Profit_Matrix19)
+
+RowF19 = c("Mean", "Standard Deviation", "Range", "Median")
+rownames(MatrixF19) = RowF19
+ColF19 = c("Price", "Discount", "Shipping Cost", "Sales Total", "Profits")
+colnames(MatrixF19) = ColF19
+
+MatrixF19 %>%
+  kbl()%>%
+  kable_styling(position = "left", full_width = FALSE) %>%
+  column_spec(1, bold = TRUE, border_right = TRUE, color = "black", background = "lightgrey")
+```
+
+<BR>
+<B><FONT SIZE=3, COLOR="#8282C6">
+Observation for the Distribution Table highlighting Basic descriptive values
+</B>
+<BR>
+The calculated distribution table gives us a general idea about the basic descriptive values for mean, standard deviation, Range and Median in which we can observe that for the Price parameter we have a varied range, i.e the store contains products of a wide variety ranging from cheap to expensive. To add, the range value is far from the mean stating the presence of outliers in the dataset.
+The discount table is sorted out, no major outliers and the values are evenly distributed, wherein for the shipping cost we can observe that the median is larger than the mean indicating a negative skewed, the data for less shipping costs is more prominent.
+The Sales total and Profits respectively showcase positive skewed values, and also high range values indicate that for particular regions heavy profits and sales are observed.(W.B 2018)
+<BR> 
+
+<B><FONT SIZE = 3, COLOR = "E6870A">
+Task Two - Part One </B>
+<BR> 
+<FONT SIZE = 3, COLOR = "#9150D1">
+Highlight the graphical representation of Price value using Box Plot and Histogram.
+<P> </FONT>
+
+```{r}
+#Part 1 for Task Two
+
+par(mfrow=c(1,2), mai = c(0.6, 1.1, 0.4, 0.4))
+
+boxplot(Pandya19Final$Price,
+        col = brewer.pal(7, "Set2"),
+        main = "Boxplot for Price Value",
+        las = 1)
+
+points(mean(Pandya19Final$Price), 
+       pch = 16, 
+       col = "Red", 
+       lwd = 10)
+
+title(ylab = "Price", line = 3, cex.lab = 1,  col.lab = "#55CC66")
+
+hist(Pandya19Final$Price,
+     las = 1,
+     breaks = 50,
+     col = brewer.pal(7, "Set2"),
+     main = "Histogram for Price Value",
+     xlab = "",
+     ylab = "",
+     ylim = c(0,100),
+     xlim = c(0,3000))
+     
+
+title(xlab = "Price", line = 2, cex.lab = 1,  col.lab = "#6729A2")
+title(ylab = "Frequency", line = 3, cex.lab = 1,  col.lab = "#55CC66")
+
+abline(v = mean(Pandya19Final$Price),
+       col = "Red",
+       lwd = 2)
+
+```
+
+Observation - 
+<BR>
+From the above Box Plot, it is clearly observed that the graph is spread in a wide range, various outliers can be observed measuring till $3500, including a hefty chunk of data in the last quartile. Even after the mean being around 500 a lot many values are observed in the 3rd and 4th quartile incdicating the price distribution range between different products over the regions.
+The Histogram on the other hand highlights the outliers as well as the fact that the reason the frequency distribution is towards the lower end i.e 500 because the highest frequncies are observed between $0-100, indicating the Price of many products lying in that range.
+
+<B><FONT SIZE = 3, COLOR = "E6870A">
+Task Two - Part Two </B>
+<BR> Highlight the graphical representation of Shipping Cost value using Box Plot and Histogram.
+<FONT SIZE = 3, COLOR = "#9150D1">
+
+<P> </FONT>
+
+```{r}
+#Part 2 for Task two
+
+par(mfrow=c(1,2), mai = c(0.6, 1.0, 0.4, 0.4))
+
+boxplot(Pandya19Final$ShippingCost_Product,
+        col = brewer.pal(7, "Set2"),
+        main = "Boxplot for Shipping Cost value",
+        las = 1)
+
+points(mean(Pandya19Final$ShippingCost_Product), 
+       pch = 16, 
+       col = "Red", 
+       lwd = 10)
+
+
+title(ylab = "Shipping Cost", line = 3, cex.lab = 1,  col.lab = "#66cc77")
+
+hist(Pandya19Final$ShippingCost_Product,
+     las = 1,
+     breaks = 10,
+     col = brewer.pal(7, "Set2"),
+     main = "Histogram for Shipping Cost value",
+     xlab = "",
+     ylab = "",
+     ylim = c(0,600),
+     labels = T,
+     border = "Red")
+
+title(xlab = "Shipping Cost", line = 2, cex.lab = 1,  col.lab = "#5469A2")
+title(ylab = "Frequency", line = 3, cex.lab = 1,  col.lab = "#546929")
+
+abline(v = mean(Pandya19Final$ShippingCost_Product),
+       col = "Blue",
+       lwd = 2)
+
+```
+
+Observation - 
+<BR>
+The Box plot showcases a lot of outliers stating that Shipping cost value varies in range from $0 to $80, the mean value being below median suggests that the distribution is negatively skewed as the spread of the data can be observed on the 1st and 2nd quartiles.
+As far as the histogram is concerned, it clearly states that majority of distribution is towards the lower price end to the left of mean, and the most distribution around the $40 to $60 range though there is a large chunk stating that for major items shipping value does lie below $40.
+
+<B><FONT SIZE = 3, COLOR = "D5670A">
+Task Two - Part Three </B>
+<BR> Highlight the graphical representation of Sales Total value using Box Plot and Histogram
+<FONT SIZE = 3, COLOR = "#9167D1">
+
+<P> </FONT>
+
+```{r}
+
+#Part three of task two
+
+par(mfrow=c(1,2), mai = c(0.6, 1.0, 0.4, 0.4))
+
+boxplot(Pandya19Final$Sales_Total,
+        col = brewer.pal(7, "Set2"),
+        main = "Boxplot for value of Total sales",
+        las = 1)
+
+points(mean(Pandya19Final$Sales_Total), 
+       pch = 16, 
+       col = "Red", 
+       lwd = 10)
+
+
+title(ylab = "Total Sales", line = 3, cex.lab = 1,  col.lab = "#BC2929")
+
+hist(Pandya19Final$Sales_Total,
+     las = 1,
+     breaks = 10,
+     col = brewer.pal(7, "Set2"),
+     main = "Histogram for Total Sales",
+     xlab = "",
+     ylab = "",
+     ylim = c(0,900),
+     labels = T,
+     border = "Red")
+
+title(xlab = "Sales_Total", line = 2, cex.lab = 1,  col.lab = "#42CC89")
+title(ylab = "Frequency", line = 3, cex.lab = 1,  col.lab = "#CC5429")
+
+abline(v = mean(Pandya19Final$Sales_Total),
+       col = "Red",
+       lwd = 2)
+
+```
+
+Observation - 
+<BR>
+For the Total Sales Box Plot seems to be the better approach to detect the knowledge about the dataset, it clearly highlights that in some regions for some products the total sales were as high as 30000 but for just one or two such cases, other than that mostly the sales range between 0-5000, wherein the data is spread over the 2nd quartile.
+
+The Histogram, in this particular case showcases the exact frequency of around 856 in the region between 0-5000 that gives us an idea about the sales in particular, due to the high distribution the mean is in the same zone irrespective of some regions getting over 5000+ sales.
+
+<B><FONT SIZE = 3, COLOR = "E6870A">
+Task Two - Part Four </B>
+<BR> Highlight the graphical representation of Profits value using Box Plot and Histogram
+<FONT SIZE = 3, COLOR = "#5140D1">
+
+<P> </FONT>
+
+```{r}
+#Part Four of Task Two
+
+par(mfrow=c(1,2), mai = c(0.6, 1.0, 0.4, 0.4))
+
+boxplot(Pandya19Final$Profits,
+        col = brewer.pal(7, "Set2"),
+        main = "Boxplot for Profits value",
+        las = 1)
+
+points(mean(Pandya19Final$Profits), 
+       pch = 16, 
+       col = "Red", 
+       lwd = 10)
+
+
+title(ylab = "Profits", line = 4, cex.lab = 1,  col.lab = "#EF5989")
+
+hist(Pandya19Final$Profits,
+     las = 1,
+     breaks = 20,
+     col = brewer.pal(7, "Set2"),
+     main = "Histogram for Profits",
+     xlab = "",
+     ylab = "",
+     ylim = c(0,350),
+     xlim = c(0,5000),
+     labels = T,
+     border = "Red")
+
+title(xlab = "Profits", line = 2, cex.lab = 1,  col.lab = "#CC5512")
+title(ylab = "Frequency", line = 3, cex.lab = 1,  col.lab = "#CC6629")
+
+abline(v = mean(Pandya19Final$Profits),
+       col = "Red",
+       lwd = 2)
+
+```
+
+Observation - 
+<BR>
+The Box plot graph for the Profit data highlights that the mean value is greater than median, making it a positively skewed distribution, there have been products that encountered profits upto $8000 but major of the product were around 1500 as the values are gradualy decreasing and the region with most data is the 1st and 2nd quartile.
+
+In case of Histogram, we can clearly see the decline in profit margins and the frequency is decreasing when the profit range is higher, there are a few outlier values but the majority is around the range of $1-$1500.
+
+<BR>
+
+<B><FONT SIZE = 3, COLOR = "E6870A">
+Task Three - Categorical Data Representation using Graphs </B>
+Third task Part One </B>
+<BR> 
+<FONT SIZE = 3, COLOR = "#9150D1">
+Create a Bar graph for the Shipping Mode
+<P> </FONT>
+
+```{r}
+
+
+par(mai = c(0.6, 1.4, 0.4, 0.4))
+
+B19F = barplot(table(Pandya19Final$ShipMode),
+        horiz = T,
+        col = brewer.pal(7, "Set2"),
+        las = 1,
+        xlim = c(0,600),
+        main = "Bar graph for Shipping Mode",
+        border = "Black",
+        legend.text = rownames(table(Pandya19Final$ShipMode)),
+        args.legend = list(x = "bottomright"))
+
+text(table(Pandya19Final$ShipMode), 
+     B19F, 
+     table(Pandya19Final$ShipMode), 
+     cex = 1, 
+     pos = 4)
+
+title(xlab = "Frequency", line = 2, cex.lab = 1,  col.lab = "#CC66FF")
+title(ylab = "Shipping Mode", line = 6, cex.lab = 1,  col.lab = "#66CCAA")
+
+```
+
+Observation - <BR>
+Who doesn't want fast shipping, we all do right.But that isn't the case as can be clearly seen from the graph only 64 share of deliveries are the same day deliveries, wherein the standard class holds the highest number and by almost more than double distribution when compared to second class stating that not everyone can afford same day delivery.
+
+<B><FONT SIZE = 3, COLOR = "E6870A">
+Third task - Part Two </B>
+<BR> Create a Bar graph for the Priority orders
+<FONT SIZE = 3, COLOR = "#7150C1">
+   
+<P> </FONT>
+
+```{r}
+
+par(mai = c(0.6, 1.4, 0.4, 0.4))
+
+B19F2 = barplot(table(Pandya19Final$OrderPriority),
+        horiz = T,
+        col = brewer.pal(7, "Set2"),
+        las = 1,
+        xlim = c(0,600),
+        main = "Barplot for OrderPriority",
+        border = "Red",
+        legend.text = rownames(table(Pandya19Final$OrderPriority)),
+        args.legend = list(x = "bottomright"))
+
+text(table(Pandya19Final$OrderPriority), 
+     B19F2, 
+     table(Pandya19Final$OrderPriority), 
+     cex = 1, 
+     pos = 4)
+
+title(xlab = "Frequency", line = 2, cex.lab = 1,  col.lab = "#DD0053")
+title(ylab = "Order Priority", line = 4, cex.lab = 1,  col.lab = "#70CC00")
+
+```
+
+Observation - <BR>
+As can be observed from the Bar Plot, the highest frequency is observed for the orders with medium priority, which in case could mean that Household items have a upper hand in our dataset as generally Office supplies are critical but in our graph those have a lower frequency distribution.
+
+<B><FONT SIZE = 3, COLOR = "E6870A">
+Third task - Part Three </B>
+<BR> 
+<FONT SIZE = 3, COLOR = "#9150D1">
+Create a Pie Chart for the Department 
+<P> </FONT>
+
+```{r}
+
+par(mai = c(0.4, 0.4, 0.4, 0.4))
+
+pie(table(Pandya19Final$Department),
+    radius = 1.0,
+    col = brewer.pal(7, "Set2"),
+    labels = table(Pandya19Final$Department),
+    main = "Piechart for Department")
+
+legend("bottomleft",
+       legend = rownames(table(Pandya19Final$Department)),
+       fill = brewer.pal(7, "Set2"),
+       border = "Black")
+
+```
+
+Observation - <BR>
+The above Pie chart showcases the various departments to which the supplies are being made, as can be seen clearly the Technology related items (gadgets, electronic appliances) hold the highest distribution followed by Furniture as in Home supplies and then eventually Office supplies.
+
+<B><FONT SIZE = 3, COLOR = "E6870A">
+Third task - Part Four </B>
+<BR> 
+<FONT SIZE = 3, COLOR = "#9150D1">
+Create a Pie Chart for different markets that are included in the sales data 
+<P> </FONT>
+
+```{r}
+
+par(mai = c(0.4, 0.4, 0.4, 0.4))
+
+pie(table(Pandya19Final$Market),
+    radius = 1.0,
+    col = brewer.pal(7, "Set2"),
+    labels = table(Pandya19Final$Market),
+    main = "Piechart for Market Data")
+
+legend("bottomleft",
+       legend = rownames(table(Pandya19Final$Market)),
+       fill = brewer.pal(7, "Set2"),
+       border = "Black")
+
+```
+
+Observation - <BR>
+The Pie chart is generally used when we wish to compare various sectors, regions with respect to a particular distribution and just the same is our case, it clearly highlights the different markets in the entire globe where the Products were sold.
+Asia Pacific and Europe being the highest consumers contributing to almost half of the entire distribution wherein africa having the least held distribution of only 62.
+
+<B><FONT SIZE = 3, COLOR = "E6870A">
+Task Four - Business queries and presentation </B>
+Fourth task - Part One
+<BR> 
+<FONT SIZE = 3, COLOR = "#9150D1">
+Question - Comaparing the Mean Prices frequency against the Market region and determine the values of which region has the highest mean distribution. 
+
+<BR>
+<P> </FONT>
+
+```{r}
+
+par(mai = c(0.8, 1.2, 0.4, 0.4))
+
+FourP19 = tapply(Pandya19Final$Price, Pandya19Final$Market, mean)
+
+BP19F = barplot(FourP19,
+        horiz = T,
+        col = brewer.pal(7, "Set2"),
+        las = 1,
+        xlim = c(0,700),
+        border = "Black",
+        main = "Barplot for Mean value of Price based on the Market Region")
+
+text(round(FourP19,2),
+     BP19F,
+     round(FourP19,2),
+     cex = 0.8,
+     pos = 4)
+
+title(xlab = "Mean Price Value", line = 2, cex.lab = 1,  col.lab = "#5449A2")
+title(ylab = "Market Region", line = 4, cex.lab = 1,  col.lab = "#CC6600")
+
+```
+
+<BR>
+Answer - As it can be observed from the above barplot, Europe region has the highest mean value distribution of Price values when compared to other regions.
+<BR>
+Observation - 
+<BR>
+The Bar Plot highlights the different regions across the globe with respect to the mean price value, and as observed mostly all regions have equal distributions but USCA falls short in the Mean Price values by a big margin. We can maybe later analyse the reason and imporve upon the same.
+
+<B><FONT SIZE = 3, COLOR = "E6870A">
+Fourth task - Part Two </B>
+<BR> 
+<FONT SIZE = 3, COLOR = "#9150D1">
+Question - Comaparing the Shipping Cost frequency against the Department and determine the values as to what changes are observed for office supplies. 
+ 
+<P> </FONT>
+
+```{r}
+
+par(mai = c(0.8, 1.2, 0.4, 0.4))
+
+FourS19 = tapply(Pandya19Final$ShippingCost_Product, Pandya19Final$Department, median)
+
+BF19=boxplot(Pandya19Final$ShippingCost_Product ~ Pandya19Final$Department,
+        ylab = "Shipping Cost",
+        las = 1,
+        col = brewer.pal(7,"Set2"),
+        notch=FALSE,
+       boxwex = 0.8)
+
+title(xlab = "Department", line = 2, cex.lab = 1,  col.lab = "#CC5512")
+title(ylab = "Shipping Cost", line = 3, cex.lab = 1,  col.lab = "#CC6629")
+      
+
+
+```
+<BR>
+Answer - For the Office Supplies it is clearly observed that the shipping cost are genreally in the 1st quartile ranging from $0 - $ 40.
+
+
+Observation - <BR>
+As can be seen with the help of Box Plot the shipping cost for furniture and technology are observed in the mean zone around $40 wherein for the office supplies majority of the data is spread over the 1st quantile with certain number of outliers.
+
+
+<B><FONT SIZE = 3, COLOR = "E6870A">
+Fourth task - Part Three </B>
+<BR> 
+<FONT SIZE = 3, COLOR = "#9150D1">
+Question 3 - Create a Pie chart and calculate the total quantity for various segments 
+<P> </FONT>
+
+```{r}
+
+P19F = tapply(Pandya19Final$Quantity, Pandya19Final$Segment, sum)
+
+pie(P19F,
+    radius = 1.0,
+    col = brewer.pal(7, "Set2"),
+    labels = P19F,
+    main = "Piechart for Sum of Sales Total per Segment ")
+
+legend("bottomleft",
+       legend = rownames(P19F),
+       fill = brewer.pal(7, "Set2"),
+       border = "Black")
+
+```
+
+<BR>
+Answer - The Sum for various Segments, Consumer, Corporate and Home office is 3694,1889 and 1029 respectively.
+<BR>
+
+Observation - 
+<BR>
+The above pie chart clearly displays the values of different segments and highlights that Consumer products cover almost more than half of the quantity of the total produced items which is a lot, followed by Corporate and then Home office. (hoffman,2020)
+
+
+<B><FONT SIZE = 3, COLOR = "E6870A">
+Task Five - Filter the data according to preference</B>
+<BR> 
+<FONT SIZE = 3, COLOR = "#9150D1">
+To present a graph based on a specific region
+<P> </FONT>
+
+```{r}
+
+fil_19 = filter(Pandya19Final, Region == "Caribbean")
+fil_mean19 = tapply(fil_19$Profits, fil_19$Department, mean)
+
+fil_mean19 %>%
+  kbl(col.names = "Average Profits") 
+
+par(mai = c(0.8, 1.4, 0.4, 0.4))
+
+BR19 = barplot(fil_mean19,
+        horiz = T,
+        col = brewer.pal(7, "Set2"),
+        las = 1,
+        border = "Red",
+        xlim = c(0,1200),
+        main = "Barplot for Average of Profits per Department",
+        cex.names = 0.6)
+
+text(round(fil_mean19,2),
+     BR19,
+     round(fil_mean19,2),
+     cex = 0.8,
+     pos = 4)
+
+title(xlab = "Average Profits", line = 2, cex.lab = 1,  col.lab = "#4229A2")
+title(ylab = "Department", line = 5, cex.lab = 1,  col.lab = "#A22929")
+
+```
+<BR>
+Observation - 
+<BR>
+The above barplot defines the average profits limited to the Carribean region based on the departments, as can be observed tehcnology here as well has the highest frequency compared to the other departments similar to the global situation, wherein Furniture supplies are more prominent in caarribean when compared to the globe.
+<BR>
+
+<B><FONT SIZE = 3, COLOR = "E6870A">
+Sixth Task </B>
+<BR> 
+<FONT SIZE = 3, COLOR = "#9150D1">
+After analyzing the dataset present your own question
+<P> </FONT>
+
+```{r}
+#Concatenating the Market column with the department column to represent them on barplot with respect to the quantity value. 
+
+Pandya19Final$marketD = paste(Pandya19Final$Market, Pandya19Final$Department)
+
+par(mai = c(0.8, 1.6, 0.4, 0.4))
+
+boxplot(Pandya19Final$Quantity ~ Pandya19Final$marketD,
+        horizontal = T,
+        las = 1,
+        cex.axis = 0.6,
+        col = brewer.pal(7, "Set2"),
+        main = "Boxplot to Represent Department Market based on the quantity",
+        xlab = "",
+        ylab = "")
+
+title(ylab = "Market Department", line = 7, cex.lab = 1,  col.lab = "#A22929")
+title(xlab = "Quantity", line = 2, cex.lab = 1,  col.lab = "#4229A2")
+
+```
+
+<B><FONT SIZE=3, COLOR="#EC11D6"> 
+Q) Which departments had the most quantity of goods produced <BR>
+<B><FONT SIZE=3, COLOR="#1136EC">
+A) When compared to the other departments, Asia Pacific region outcasts mostly all of them when compared as in most of the department cases it is leading the distribution containing certain outliers as well.
+The above graph clearly shows the quantity produced of products when compared to different regions and their outliers. It can be observed that Asia Pacific has the highest spread, followed by Europe in most cases except technology.<BR>
+<B><FONT SIZE=3, COLOR="#137177">
+
+<B><FONT SIZE = 3, COLOR = "CC550A">
+TASK SEVEN - Enhancement from the above Task </B>
+<BR> 
+<FONT SIZE = 3, COLOR = "#9150D1">
+<B> After the analysis from Task 6, make another question regarding the output</B>
+<P> </FONT>
+
+Question - As it can be observed in the output of the above task certain regions fall short when compared to other regions specify the following departments and in such cases the outlier status for the same?
+```{r}
+#To highlight the USCA region to check the average production
+fil_192 = filter(Pandya19Final, Market == "USCA")
+fil_mean192 = tapply(fil_19$Quantity, fil_19$Department, mean)
+
+fil_mean192 %>%
+  kbl(col.names = "Average Quantity") 
+
+par(mai = c(0.8, 1.4, 0.4, 0.4))
+
+BR192 = barplot(fil_mean192,
+        horiz = T,
+        col = brewer.pal(7, "Set2"),
+        las = 1,
+        border = "Red",
+        xlim = c(0,20),
+        main = "Barplot for Average of Quantity per Department for USCA Region",
+        cex.names = 0.6)
+
+text(round(fil_mean192,2),
+     BR192,
+     round(fil_mean192,2),
+     cex = 0.8,
+     pos = 4)
+
+title(xlab = "Average Quantity ", line = 2, cex.lab = 1,  col.lab = "#4229A2")
+title(ylab = "Department", line = 5, cex.lab = 1,  col.lab = "#A22929")
+```
+
+
+<BR>
+
+Answer - 
+For the above output, the USCA and africa are the two regions that have the lowest quantity distribution referring to the fact that least products are manufactured in these regions, also USCA in the technology department is the only value that has no outliers, stating that their is a limited but precised production.
+As can be observed from the graph the average quantity production for USCA region is below 10 for all the departments and below 7 specifically for the Technology department which can be the reason of reduced Profits.
+<P>
+
+<P><BR>
+<FONT SIZE=4, COLOR="#75A91B">
+<B>CONCLUSION</B>
+</FONT>
+
+<P>
+
+<FONT SIZE = 3, COLOR = "#00BB00">
+To begin with, for the following report we went and explored a small aspect of the Retail Industry which seemed to be really intimidating, as it was not specific to any particular region but spread all over the globe.
+I believe that with the changing scenario with the industries, organizations needs to keep up and update their systems to cope up with the current world scenario.
+<BR>
+When working upon the database, I observed the dominance of Acia Pacific region with greater profits, which when I compared to the values of Production rates made sense.
+The more products you manufacture their is a greater chance to get higher profits, other factors do play a vital role such as the supply, discounts, shipping charges as well.
+In our case, technology was the most prominent market wherein almost most regions were in profit due to the high number of sales.
+<BR>
+After working on this report, I realized the trends of market a little better and now I have an idea as to what major factors could lead to the success or downfall of any individual or organization, to keep up with the business trends one needs to stay updated and improve efficiently.
+
+<P>
+
+<P><BR>
+<FONT SIZE=4, COLOR="#75AB01">
+<B>BIBLIOGRAPHY</B>
+</FONT>
+
+<P>
+
+<FONT SIZE = 3, COLOR = "#00BB00">
+
+1) Hoffman, david. (2020, December 12). Pie chart in R with PIE() function ▷ [with several examples]. R CODER. Retrieved February 20, 2022, from https://r-coder.com/pie-chart-r/ 
+<BR>
+2) W, H. (2018, November 5). Formatting tables in R markdown with kableextra. A Potpourri of Data Science Topics for Analysts. Retrieved February 20, 2022, from https://datadojo.dev/2018/11/05/formatting-tables-in-r-markdown-with-kableextra/ 
+<BR>
+3) Nair.A (2020, March). Big Data Analytics in retail market size, Share &amp; Analysis: Forecast - 2028. Allied Market Research. Retrieved February 20, 2022, from https://www.alliedmarketresearch.com/big-data-analytics-in-retail-market#:~:text=For%20the%20retail%20industry%2C%20big%20data%20is%20used,their%20purchase%20history%2C%20resulting%20in%20personalized%20shopping%20experiences. 
+<BR> 
+4) Green, T. (2018, January). Best retail stocks of 2022: Retail investing 101. The Motley Fool. Retrieved February 20, 2022, from https://www.fool.com/investing/stock-market/market-sectors/consumer-discretionary/retail-stocks/ 
+<BR>
+
+
+<P>
+
+<P><BR>
+<FONT SIZE=4, COLOR="#8282C6">
+<B>APPENDIX</B>
+</FONT>
+
+<P>
+<FONT SIZE = 3, COLOR = "#8282C6">
+Before we come to an end with this final report, I would like to thank the Professor not only for the interactive sessions in class and helping us learn the various aspects of the analytics but for providing the best possible start to this masters journey we all started. The fact that we were made to focus and realize our fields of interest from the beginning so that we can build a strong base and excel in the future. 
+Hopefully we all will be able to stand up to the expectations and use the same knowledge in the industry where it matters.
+I would like to also thank all of my classmates for the great and intereactive discussion session, specially Andre, Manas and Saarthak for always being the proactive whenever I felt like discussing any doubt.
+Then again, it's not just R I believe we learned in this class but a lot more.
+
+<BR> 
+<FONT SIZE = 3, COLOR = "#00BB00">
+RMD file included in the report - PandyaHarsh_M6FinalProject_RMD.rmd
+
+```{r}
+
+```
+
+
