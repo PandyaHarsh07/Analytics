@@ -1,0 +1,122 @@
+---
+title: "Discussion2_Pandya.R"
+author: "Harsh Pandya"
+date: "1/24/2022"
+output: html_document
+---
+
+```{r}
+#Libraries Used for the same
+library(tidyverse)
+library(dplyr)
+library(readr)
+library(RColorBrewer)
+library(readxl)
+
+#DataSet
+library(readxl)
+Discussion2_Sales <- read_excel("/Users/HARSH/Documents/R Proj ALY6000/DataSets/Discussion2_Sales.xlsx")
+View(Discussion2_Sales)
+
+```
+#Basic Descriptive Statistics for Price 
+```{r}
+
+
+#Average Value or Mean
+Mean_Price=mean(Discussion2_Sales$Price,na.rm=TRUE) #For Null values
+print(paste("The Mean of Price is","$",round(Mean_Price,2)))
+
+```
+```{r}
+
+#Standard Deviation
+SD_Price=sd(Discussion2_Sales$Price,na.rm=TRUE) #For Null values
+print(paste("The SD is","$",round(SD_Price,2)))
+
+
+```
+
+```{r}
+#Median 
+Median_Price=median(Discussion2_Sales$Price,na.rm=TRUE) #For Null values
+print(paste("The Median is","$",round(Median_Price,2)))
+
+```
+
+```{r}
+
+#Minimum Value
+MinValue_Price=min(Discussion2_Sales$Price,na.rm=TRUE) #For Null values
+print(paste("The Min Value of Price is","$",round(MinValue_Price,2)))
+
+```
+```{r}
+
+#Maximum Value
+MaxValue_Price=mean(Discussion2_Sales$Price,na.rm=TRUE) #For Null values
+print(paste("The Max Value of Price is","$",round(MaxValue_Price,2)))
+
+```
+```{r}
+
+#Range
+Range_Price=(MaxValue_Price-MinValue_Price)
+print(paste("The Range of Price is","$",round(Range_Price,2)))
+
+```
+
+```{r}
+
+#25th Quantile
+First_Quantile=quantile((Discussion2_Sales$Price),0.25)
+print(paste("The 25th Quantile is","$",round(First_Quantile,2)))
+
+
+```
+```{r}
+
+#Matrix
+
+Summary_Statistics=c(round(Mean_Price, 2),round(SD_Price, 2),round(Median_Price, 2),round(MinValue_Price, 2),round(MaxValue_Price,2),round(Range_Price,2),round(First_Quantile,2))
+
+#Table Creation
+
+Summary_Matrix=matrix(Summary_Statistics, nrow = 7, byrow = TRUE)
+
+Statistics=c("Mean","Standard Deviation","Median","Minimum Value","Maximum Value","Range","25th Quantile")
+
+colnames(Summary_Matrix)= "Price"
+rownames(Summary_Matrix)= Statistics
+
+knitr::kable(Summary_Matrix,caption = "TABLE (HARSH PANDYA)")
+```
+```{r}
+
+#Histogram for Price
+
+hist(Discussion2_Sales$Price,breaks = 15,
+     main ="HISTOGRAM (Harsh Pandya)",
+     ylab = "Distribution",
+     xlab = "Price",
+     col = terrain.colors(12),
+     las=1,xaxp=c(0,5000,20))
+```
+
+```{r}
+
+#Box Plot for Price 
+
+boxplot(Discussion2_Sales$Price~Discussion2_Sales$Product_Category,
+        range = 4,col = brewer.pal(7,"Set1"),
+        main="BOX PLOT (Harsh Pandya)",
+        ylab= "PRODUCT CATEGORY",
+        xlab= "($)PRICE",
+        horizontal = TRUE,xaxp=c(0,5000,20),ylim=c(0,4000),cex.axis="0.75")
+
+```
+
+Price is the numerical value chosen by me.
+As can be observed from the above distributions, there is a huge difference observed between the Maximum Value and Minimum Value of prices. The gap herein represent a varied range. For the same reason we can observe a positive standard deviation
+The Histogram represents that the maximum chunk of data prices are observed between the range of $0 to $2000, and a very few of them rise above $3000.
+The Bar Plot highlights the price with respect to the defined Product Categories, representing that the office supplies consist of the higher end prices.
